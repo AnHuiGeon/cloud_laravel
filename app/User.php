@@ -27,6 +27,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'confirm_code',
     ];
+    // 테이블 내용 조회시 숨겨지는 필드들
 
     /**
      * The attributes that should be cast to native types.
@@ -39,5 +40,9 @@ class User extends Authenticatable
     ];
 
     protected $dates = ['last_login'];
+
+    public function local_semesters(){
+        return $this -> hasMany(LocalSemester::class);
+    }
     
 }

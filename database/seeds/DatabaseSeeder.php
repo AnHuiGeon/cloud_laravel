@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
         }
         
         App\User::truncate();
-
         $this->call(UsersTableSeeder::class);
 
         if(config('database.default') !== 'sqlite') {

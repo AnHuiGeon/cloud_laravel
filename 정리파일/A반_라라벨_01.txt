@@ -1,0 +1,44 @@
+1. 준비
+1) 확인
+php 인터프리터 사용 가능확인
+cmd창에서
+php -v 실행확인
+
+실행이 안되면 -> xampp설치 또는 교과서 부록A를 참고
+(이 교재는 bitnami설치하여 사용하도록 되어 있음)
+
+2) 컴포저를 설치
+  composer # node의 npm와 같은 역할
+  composer -V
+
+https://getcomposer.org/download/
+
+Composer-Setup.exe 파일 다운로드 후 설치
+cmd창닫고 파일익스플로러 닫고
+다시 cmd창 실행
+
+echo %PATH% # 설치경로 확인
+
+composer -V
+
+2. 라라벨 인스톨러 설치: 생략 -> page.2 composer명령으로 라라벨 설치가능
+1) 명령창(Power Shell)에서
+  composer global require laravel/installer
+  #npm -g
+
+3. 라라벨 설치 및 프로젝트 생성 : 1) 또는 2)
+1) 라라벨 인스톨러 사용하기
+laravel new 프로젝트설치폴더명
+
+laravel new myapp
+
+2) 컴포저만 사용하기
+composer create-project --prefer-dist [--verbose] laravel/laravel 프로젝트 설치 폴더명
+composer create-project --prefer-dist --verbose laravel/laravel myapp
+# --verbose -> 설치 과정을 다 보여줌
+
+4. 설치 및 생성 확인
+cd 프로젝트설치폴더명 # cd myapp
+php artisan --version
+
+php artisan serve # 서버 실행, php artisan serve --host=서버아이피 --port=포트번호

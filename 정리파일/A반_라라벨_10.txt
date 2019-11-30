@@ -1,0 +1,38 @@
+<<즉시로드와 페이징>>
+- eager load : 즉시 로드, 빠른 로드, 사전 로드, 사전 예약로드
+  <-> lazy load : 지연 로드, 느린 로드, 게으른 로드
+  : 로딩
+
+- 프로그래머는 늘 극한 상황을 상정하여 코딩해야
+  억대 레코드를 가지고 있는 DB 쿼리를 보내고 응답을 받아서
+  그 결과를 뷰로 보내기
+  ===> 컴퓨터의 자원, 네트워크의 자원 소비 : 대용량
+대응 방법1) 하드웨어 증설
+대응 방법2) 이거 로딩(eager loading), 페이징(pagination)
+
+1. eager loading
+1) 라우팅 확인
+Route::resource('articles','ArticlesController');
+2) ArticlesController 를 수정 : p.101
+3) 뷰작성 : p.101
+4) 서버 실행 : php artisan serve
+5) 테스트 : GET /articles
+6) 문제점 확인 : 라우팅에 p.102 내용 추가
+   DB 이벤트 처리 : 14장 내용 확인
+   - N+1 쿼리 문제 : N개 데이터 요청에 대해 N+1회 쿼리 요청
+7) 이거 로딩으로 해결
+  : 컨트롤러 수정 : p.103
+  with(인자)문 사용 : 인자-관계(관계정의메서드)를 적는다.
+  주의점 : p.103
+  N+1 ===> 2개로 줄었음
+  테스트 : GET /articles
+8) 지연로딩 : lazy loading
+  - load() 사용
+   관계가 필요하지 않아서 즉시로드 않고 나중에 필요시 로딩
+  - 테스트 : GET /articles
+
+2. pagination(페이징)
+1) get()---->paginate(인자) : 인자-1페이지에 나타날 레코드 수
+  latest()
+  orderby('created_at', 'desc')
+  $articles = \App\Article::with('user')->latest()->paginate(3);

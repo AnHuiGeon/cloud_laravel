@@ -1,0 +1,42 @@
+<<이메일: 모니터링, 감시 - 알림<notification)>>
+- 전통적인 알림 방법 : 이메일
+  push alarm : firebase, socket.io, websocket, webrtc
+- 라라벨에서 이메일 보내기
+a. 지메일(smtp)
+b. 메일건(Web)
+
+1. 지메일 이용하기
+(준비) config/mail.php p.144 내용 추가, 보내는 사람 설정
+
+1) 지메일 드라이버 설정
+.env p.145
+2) 지메일 로그인
+3) 보안
+4) 보안수준이 낮은 앱의 액세스 설정: 사용함
+5) 라우팅 수정 : p.146
+6) 뷰작성 : p.147
+7) 서버 재시작
+8) 테스트: GET /mail
+9) 메일확인
+
+2. 메일건으로 메일 보내기
+* 메일건 서버와 HTTP 통신하기,
+  - 우리의 라라벨 프로젝트는 클라이언트 역할
+
+1) 메일건 가입하기
+2) HTTP Client 컴포넌트(구성요소, 구성품) 설치 ==> 아이템 장착 그런거래
+   composer require "guzzlehttp/guzzle:~5.3|6.0"
+   composer require "guzzlehttp/guzzle:~5.3"
+3) .env에서 메일드라이버 설정
+
+4) 서버 실행
+5) 테스트 GET /mail
+
+3. 보다 실질적인 메일 보내기 : mailgun 사용
+- 메일 라이브러리
+Mail::파사드의 클로저의 인자값 : \Illuminate\Mail\Message의 객체($msg)
+- $msg->to() : 받는 사람 주소
+- $msg->from() : 보내는 사람 주소
+- $msg->cc() : 참고할 사람 주소: 참조
+- $msg->bcc() : 숨은 참고할 사람 주소
+- $msg->attach()

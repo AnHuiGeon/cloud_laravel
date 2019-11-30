@@ -1,0 +1,108 @@
+<<예외처리 및 디버깅>>
+* 개발자의 숙명 : 버그르 수정-디버깅
+* 개발자는 믿으면 안됨.
+* 버그(Bug): 오류, 우리가 예측하지 못한 결과
+* Debug
+
+1. 전역 예외처리 이용하기
+- Back trace log: 전역 예외처리기가 해 준 것
+
+* 전역 예외처리 테스트 해보기
+1) 컨트롤러 수정 : p.130
+2) 테스트 : GET /articles/1
+3) 결과 확인: 브라우저 or storages/logs/laravel-TIMESTAMP.log
+
+- 예외, 오류(Exception, Error) : 라라벨에서는 모두 예외처리 
+  예외발생하면 실행흐름은 중지
+- 예외처리 방법 : 2가지
+  a. try{}catch{} 이용하여 프로그래머가 직접 처리
+  b. 전역 예외처리기에 맡기기
+
+* 전역 예외처리 이용하기
+- 전역예외 처리기 : app/Exceptions/Handler.php
+1) 컨트롤러 수정 : p.133
+2) 전역 예외처리 수정 : p.133
+3) 테스트 : GET /articles/1   ==> 정상실행
+   GET /articles/10000        ==> 예외발생
+  
+4) .env의 APP_ENV=local ==> APP_ENV=production
+
+5) 뷰 작성: p.134
+
+6) 서버 재실행
+7) 테스트: GET /articles/10000
+
+* 예외 던지기
+- thorw 예외클래스객체('메시지');
+- abort(int $code, string $msg='');
+abort_if(bool $boolean, int $code, string $msg = '');
+abort_unless(bool $boolean, int $code, string $msg = '');
+
+<Debugging>
+- Bug의 심각성 : 생명과 자산의 위협 (ex, 우주왕복선 폭발)
+- 대책:
+  운영 서버에 배포전 버그를 감지할 수 있는 도구/개발 방법론 적용
+  배포후 버그를 빠르게 감지, 보고, 관리 하는 프로세스 적용
+- 버그의 종류와 특징
+
+1) 문법 오류 : 초보 여러분들이 많이 하는것, 제일 찾기 쉬운 오류
+
+2) 로직 오류 :
+   조건문, 반복문 많이 발생
+   무한반복, 한번더 or 한번덜 반복
+
+3) 리소스 오류:
+null pointer, uninitialized variable, wrong data type 등
+대책:
+a. 객체는 사용전에 null 인지 확인
+  if($obj != null){ ... }
+b. 변수는 사용전에 초기화 여부 확인
+  if(isset($var)){} // if(isset($_GET['pass'])){}
+c. 데이터타입이 중요한 경우 typeof나 instanceof로 확인
+
+4) 계산 버그:
+    divide by zero, 반올림 오류, static 처리 오류
+
+5) 동시성 오류(concurrency)
+쓰레드: 다중 쓰레드
+- 공유자원, DB트랜잭션
+
+<디버깅>
+- 정석없음 , 경험중요
+- IDE, phpStorm, WebStorm
+- dd(인자들) : 헬퍼함수
+  인자들의 값을 Dump 처리하고 실행 중단
+  break point
+
+1) dd 사용하기
+1) 컨트롤러에서 dd사용
+p.140
+2) 테스트 : GET /articles/1
+
+- dd를 이용하는 일반적인 순서
+: try and error => 제일 전통적이면서도 원시적인 방법
+a. 뷰파일 중간에 {{ dd('reached') }} 입력하여 실행
+b. 에러가 발생한 경우 dd() 앞쪽 에러 있음을 감지
+c. 에러가 발생하지 않은 경우 dd() 뒤쪽 에러 있음을 감지
+d. 에러 발생 예상 쪽에서의 중간부분에 {{ dd('reached') }} 입력하여 실행
+e. 에러가 찾아질 때 까지 반복
+
+2. 뷰파일 디버깅
+1) 컨트롤러 수정 : p.141
+2) 테스트 : GET /articles/1
+
+3. 쿼리 디버깅
+팅커이용
+쿼리빌더 이용, 모델에 값 요청
+모델의 반환(컬렉션)객체->toSql()
+
+4. 콘솔 디버깅
+- artisan
+- log파일 확인
+
+- ClassNotFoundException발생
+  ---> 대책
+  composer dump-autoload --optimize
+
+5. 외부 컴포넌트 이용(17장)
+- debug bar 이용

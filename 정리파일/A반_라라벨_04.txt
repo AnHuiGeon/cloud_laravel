@@ -1,0 +1,154 @@
+- php artisan tinker
+  팅커 : 라라벨의 REPL(node REPL : node.exe)
+mysql REQL : mysql -uroot -p
+
+1. DB준비
+mysql -uroot -p
+mysql 프롬프트
+1) DB생성
+create database wdj;
+2) 사용자 생성
+create user 'wdj2' identified by 'node';
+
+3) 권한부여
+grant all privileges on wdj.* to 'wdj2';
+flush privileges;
+
+4) 종료
+quit
+
+5) 재접속
+mysql -uwdj2 -p
+password : node
+
+6) posts 테이블 생성
+create table posts(
+id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(255),
+body TEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+// utf8이 에러난다면 utf8mb4를 사용한다.
+
+2. DB 실습
+1) laravel REPL(cli : client) 실행
+  php artisan tinker
+2) 조회
+DB::select('select * from posts'); ==> QueryException 발생
+대책 -> .env 파일 수정
+DB_DATABASE=wdj
+DB_USERNAME=wdj2
+DB_PASSWORD=node
+3) 종료후 팅커 재실행
+  exit
+  php artisan tinker
+
+4) 조회 재실행
+DB::select('select * from posts');
+
+5) 테스트 데이터 입력
+DB::insert('insert into posts(title, body)values(?, ?)',['테스트임', '테스트 안녕안녕']);
+DB::insert('insert into posts(title, body)values(?, ?)',['테스트민수', '앞에봐라 안녕안녕']);
+
+6) $posts = DB::select('select * from posts');
+7) $posts[0]->title;
+8) $post = DB::selectOne('select * from posts where id = ?', [1]);
+
+DBMS가 바뀌면 쿼리문도 바뀌어야하기 때문에 ORM을 도입함.
+
+3. Query Builder(쿼리 빌더)
+raw 쿼리이용방법의 단점 극복
+SQL문장을 PHP 클래스 문법으로 구현해둔 라이브러리
+
+- 쿼리빌더 객체를 만들어야 함: DB::table('테이블명')
+  get_class();
+  get_class(DB::table('posts')); 테스트 해보기
+1) 조회
+DB::table('posts') -> get(); ====== DB::select('select * from posts');
+DB::table('posts') -> first(); ====== DB::select('select * from posts limit 1');
+DB::table('posts') -> find(2); ====== DB::select('select * from posts where id = "2"');
+DB::table('posts') -> pluck();
+DB::table('posts') -> insert();
+DB::table('posts') -> update();
+DB::table('posts') -> delete();
+2) 조건절 주기 : where()
+DB::table('posts') -> where('id', '=', 1) -> get();	// method chain
+DB::table('posts') -> where('id', 1) -> get();	// 위의 문장과 같은 것, '='만 생략 가능
+DB::table('posts') -> where('id', '>', 2) -> get();
+DB::table('posts') -> whereId(1) -> get();
+DB::table('posts') -> whereTitle('테스트민수') -> get();
+DB::table('posts') -> whereBody('앞에봐라 안녕안녕') -> get();
+DB::table('posts') -> where(function($q){$q->where('id',1);}) -> get();
+
+- 다른 메서드들 : 메서드 시그니쳐(프로토타입)
+inser()
+update()
+delete()
+pluck()
+limit()
+orderBy()
+count(), distinct(), select(), join(), union(), whereNull(), whereNotNull(),
+having(), groupBy()
+
+4.Eloquent ORM (Object Relation Mapping)
+ORM 사용이유
+- 객체지향 언어에서 데이터를 객체로 표현
+- DB에서 데이터를 테이블 내에 하나의 필드값, 로우(레코드, 행)로 표현
+- 데이터를 표현하는 것이 달라 이를 하나로 연결해서 사용하기 위해
+ORM을 라라벨에서는 Eloquent로 구현하여 제공
+
+1) DB 준비
+posts 테이블, authors 테이블 작성
+
+mysql -uwdj2 -p #node
+
+CREATE TABLE authors(
+	id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	email VARCHAR(255) NOT NULL,
+	password VARCHAR(60) NOT NULL)
+	ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+show tables;
+
+INSERT INTO authors(email, password) VALUES('wdj2@yju.ac.kr', 'password');
+
+SELECT * FROM authors;
+
+2) 모델작성 (php artisan make:model 모델명)
+모델명 지정의 관례 => ( 테이블명 : 복수형 / 모델명 : 테이블명의 단수형 )
+(예외) 관례를 지키지 않는경우 => 모델 소스코드에 protected $table = '관례지키지않은테이블명';
+
+php artisan make:model Post
+php artisan make:model Author
+  ==> app폴더 안에 생성 : app/Post.php와 app/Author.php
+
+3) 모델을 이용한 쿼리빌더 사용
+- php artisan tinker
+App\Author:g:get();
+$author = new App\Author;
+$author -> email='test@yju.ac.kr';
+$author -> password='password';
+$author -> save(); ---> QueryException : insert into `authors` (`email`, `password`, `updated_at`, `created_at`) values (test@yju.ac.kr, password, 2019-10-02 03:08:06, 2019-10-02 03:08:06)
+엘로퀀트에서 만든 모델에서 'updated_at', created_at' 필드(컬럼)이 있다고 생각하여 쿼리 처리
+Author 모델의 소스코드에 public $timestamps = false 추가
+// 'updated_at', 'created_at'컬럼 사용을 취소
+// 위 작성 후 tinker는 껐다가 다시 켜야함.
+
+팅커 종료후 재실행 : php artisan tinker
+$author = new App\Author;
+$author -> email='test@yju.ac.kr';
+$author -> password='password';
+$author -> save(); ---> QueryException
+$author -> get();
+
+App\Author::create(
+[
+	'email'=>'yju@yju.ac.kr',
+	'password'=>bcrypt('password'),
+]
+);
+--> MassAssignmentException 발생
+모델소스코드에 protected $fillable = ['허용필드명',''];	// 화이트리스트
+	        protected $guarded = ['불허필드명',''];	// 블랙리스트
+
+protected $fillable = ['email', 'password'];	// app/Author.php
+protected $fillable = ['title', 'body'];		// app/Post.php

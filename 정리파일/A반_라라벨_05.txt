@@ -1,0 +1,61 @@
+<<Migration>>
+Migration : 한 운영환경으로부터 다른 운영환경으로 옮기는 작업
+DB에서 Migration : 데이터베이스 스키마의 버전을 관리하기 위한 하나의 방법(데이터 전환)
+DB 버전관리하는 라라벨의 기능
+DB의 어떤걸 버전관리?
+DB스키마 : 테이블 관리
+이력관리, 롤백
+
+0. 실습준비
+이전장에서 생성한 테이블 삭제
+mysql -uwdj2 -p #node
+
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE posts;
+DROP TABLE authors;
+SET FOREIGN_KEY_CHECKS=1;
+
+1. 마이그레이션 파일 생성
+php artisan make:migration create_posts_table --create=posts;
+php artisan make:migration create_authors_table --create=authors;
+
+마이그레이션 파일명 관례 > 
+1. create_, make_, add_, drop_, change_ 등등 접두어(마이그레이션 동작설명)
+2. 접두어
+3. 접미사: _table
+  create_테이블명_table
+    생성되는 파일명은 TIMESTAMP_create_테이블명_table.php 형태
+
+2, 마이그래이션 파일 수정
+- up() : 테이블 스키마 정의
+	bigIncrements(), string(), text(), timestamps(), p.53 내용
+	스키마빌더의 메서드들
+	https://laraval.kr/docs/6.x/migrations
+- down() : 테이블 스키마 삭제
+
+3. 마이그레이션 실행
+php artisan migrate
+
+1) 마이그레이션 실행 취소 : rollback(바로 직전 마이그레이션 취소)
+  php artisan make:migration add_name_to_authors_table --table=authors
+  마이그레이션파일 수정
+  php artisan migrate
+  php artisan migrate:rollback
+
+2) 마이그레이션 실행 초기화 : reset
+
+3) 마이그레이션 실행 초기화 및 재실행 : refresh
+php artisan migrate:reset
+php artisan migrate
+
+프로젝트 개발의 일반적인  순서(교수님말씀...!! 분석과 설계를 잘해야 살아남는다)
+1. 기획
+2. 분석
+3. 설계(DB설계-정규화, IO설계, 화면설계, 시스템설계)
+4. 구현
+5. 테스트 및 디버깅
+6. 납품(설치, 운용개시, 배치, deploy, install, release-릴리즈)
+
+모델 파일 생성+마이그레이션+팩토리(factory)+컨트롤러 한방에 생성하기
+php artisan make:model Project -m -f -c
+php artisan make:model Project -a

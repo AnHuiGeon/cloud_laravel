@@ -1,0 +1,35 @@
+<<DB 작업 일반적인 순서>>
+0. 설계 완료, ERD 등 참고
+1. 모델 작성
+php artisan make:model 모델명 -c -m -f
+# -c: 컨트롤러, -m: 마이그레이션, -f: 팩토리 함께 생성
+
+2. 모델 파일 수정
+protected $fillable=[];
+
+3. 마이그레이션 파일에서 DB스키마 정의
+
+4. .env 파일에서 DB연결 설정 확인
+
+5. 마이그레이션 실행 :  php artisan migrate
+  - DB 테이블 생성
+
+6. 팩토리 파일 수정
+  - 1.에서 -f를 생략 했다면
+    php artisan make:factory 모델명Factory --model=모델명
+
+7. 시더생성: 생략가능
+php artisan make:seeer 모델명sTableSeeder
+
+8. 시더 수정
+  factory(App\모델명::class, 생성데이터갯수)->create()
+  factory(App\모델명::class, 생성데이터갯수)->make()
+
+9. 마스터 시더파일 수정
+
+10. 시딩 실행: php artisan db:seed
+
+11. 컨트롤러 수정
+
+12. 뷰처리
+

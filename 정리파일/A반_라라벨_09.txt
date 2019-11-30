@@ -1,0 +1,60 @@
+<<DB 시딩>>
+- seed (씨) + ing (~하는 것) : 씨를 심는다
+  DB에다가 데이터를 심는 행위
+- 개발 테스트용 기본 데이터들을 입력후 테스트 가능
+  테스트 데이터의 입력을 자동화 하려 할 때
+
+<User 모델을 위한 시딩>
+1) 시더를 작성 : Seeder
+php artisan make:seeder UsersTableSeeder
+2) 시더 내용 추가 : p.93
+database/seeds/UsersTableSeeder.php
+3) 시딩 실행
+php artisan db:seed --class=UsersTableSeeder
+4) DB에 접속후 확인
+
+* model factory : 모델 공장
+- dummy data 를 생산하기 위한 도구
+- dummy data : 모조, 가짜, 실제반대, 테스트용 가짜데이터
+- 맛보기
+0) 팅커 이용
+1) p.94 실습
+2) 시더 수정 : p.94
+    factory(App\User::class,5)->create();
+3) 시딩 실행 : php artisan db:seed --class=UsersTableSeeder
+
+- 팩토리 클래스를 이용한 시딩
+1) 팩토리 클래스 생성
+php artisan make:factory 모델명Factory --model=모델명
+database\factories\모델명Factory.php 생성됨
+
+php artisan make:factory UserFactory --model=User
+
+2) 팩토리 클래스 수정: p.95
+
+3) 시딩
+
+<Article 모델에 대한 시딩>
+1) 팩토리 파일 생성
+php artisan make:factory ArticleFactory --model=Article
+
+2) database/factories/ArticleFactory.php 수정 : p.96
+
+3) 시더 생성
+php artisan make:seeder ArticlesTableSeeder
+
+4) 시더 수정 : p.96 참고
+
+5) 시딩 실행
+php artisan db:seed --class=ArticlesTableSeeder
+
+<마스터 시더>
+1) 마스터 시더 수정
+database\seeds\DatabaseSeeder.php : p.97참고
+// 마스터 시더를 사용하려면 factory와 seeder파일이 다 정의되어 있어야 함.
+2) 시딩 실행
+php artisan db:seed
+
+<마이그레이션과 시딩>
+- 동시에 하기
+php artisan migrate:refresh --seed

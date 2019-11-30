@@ -1,0 +1,60 @@
+1. 뷰
+view(): 라라벨의 도우미함수
+- 규칙1 : resources/views/하위폴더에 있는 뷰파일 : 하위폴더.뷰파일명.blade.php로 작성한다.
+            호출 : view('하위폴더.뷰파일명');
+            호출 : view('하위폴더/뷰파일명');
+                           ','나 '/'나 상관 없다.
+- 규칙2 : 뷰파일의 확장자 : *.blade.php이다.
+            (blade의 문법과 php의 문법을 모두 사용 가능하다.)
+- 규칙3 : view('뷰파일명'); 처럼 확장자(.blade.php)를 생략한 뷰파일명만 적는다.
+
+2. 데이터바인딩(Data binding)
+컴파일하는언어를 정적바인딩 인터프리터언어를 동적바인딩
+바인딩이라는 개념을 알아둬라.
+바인딩 : 데이터를 사용할 수 있는 상태로 만드는 것
+- with()헬퍼함수를 사용
+Route::get(); -> '파사드'라고 한다(슬슬 없어질 녀석임)
+하위호환을 위해 파사드 문법은 남아 있으나 언젠가는 없어질 수 있다.
+
+3. 블레이드(blade)
+라라벨의 뷰템플릿, pug(구 jade)
+
+문법
+1) interpolation(보간) : 채워넣기 - 변수를 이용하여 문자열 데이터 출력
+- {{ $변수명 }} : <?= $변수명 ?> + XSS(Cross-Site Scripting)공격방지
+: <?= htmlspecialchars($변수명); ?>
+- {{!! $변수명 !!}} : <?= $변수명; ?> ==> XSS방지기능 무력화
+- @{{ $변수명 }} : 블레이드 내의 자바스크립트코드에서 사용
+
+2) 주석문 :  {{-- 주석내용 작성 --}}
+
+3) 제어구조
+*: @+제어구문(키워드): @if
+*: 반드시 제어구조의 종료 표시: @end + 제어구문(키워드) : @endif
+
+- 조건문 : @if, @else(@endelse 없음), @elseif, @unless : @if(! 조건식)
+
+- 반복문 : 
+@foreach~@endforeach
+@for~@endfor
+@while~@endwhile
+@forelse~@empty~@endforelse
+(@for + @if)
+
+4) 레이아웃 : 상속
+- DRY(Don't Repeat Yourself) : 중복제거
+- 템플릿 작성
+  layouts/master.blade.php
+  @yield : 양보하다
+              해당하는 부분은 다른 곳에서 작성한 것을 사용하도록 양보함
+              다른 곳에서 작성한 것을 사용하기 위해 인자값을 작성하는 라벨을 지정
+              @yield('content') : content - 라벨
+- 작성된 템플릿 사용
+  @extends('레이아웃설정')
+  @section('라벨')
+     대체돌 부분 작성
+  @endsection
+
+- 조각뷰
+  @incloude('조각뷰파일')
+  @parent

@@ -4,6 +4,8 @@
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
+            <!-- config('app.name')을 알고 싶다면 -->
+            <!-- /config/app.php 파일 참고 -->
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
@@ -18,6 +20,9 @@
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
+                    <li>
+                        <a href="{{ route('localSemesters.index') }}">현지학기제</a>
+                    </li>
                 @guest
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('sessions.create') }}">{{ __('Login') }}</a>

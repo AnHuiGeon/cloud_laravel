@@ -61,3 +61,4 @@ Route::post('auth/reset', [
     'as' => 'reset.store',
     'uses' => 'PasswordsController@postReset',
 ]);
+Route::resource('localSemesters', 'LocalSemestersController');

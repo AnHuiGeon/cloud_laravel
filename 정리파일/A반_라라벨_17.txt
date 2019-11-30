@@ -1,0 +1,18 @@
+<<라라벨 소스코드 다운로드 후 설정하여 테스트하기>>
+1. 소스코드 다운로드 후 압축풀기
+2. .env파일 생성
+  (.env.exam파일 복사후 수정)
+3. composer install (composer.json 확인)
+   vendor 폴더 생성됨
+4. php artisan key:generate
+5. config/databse.php
+   'mysql' => [
+       ...
+       'strict' => false,   // true -> false로 수정
+       ...
+   ]
+6. DB가 없는 경우(옵션)
+   a. DB 생성
+   b. php artisan migrate --seed --force    // 마이그레이션 + 시딩
+
+7. php artisan serve

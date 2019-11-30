@@ -1,0 +1,38 @@
+<<유효성 검사>>
+* 사용자의 입력은 절대로 신뢰하지 마라!
+==> 사용자의 입력은 반드시 체크해야 한다.
+- Froent-end check : JS
+- Back-end check : PHP, JSP, Node.js, Ruby on Rails, Python(Django)
+==> 둘다 체크하는 것 바람직
+
+-- trade-off (트레이드 오프) --
+편리함 vs. 자유도
+간결한코드 vs. 가독성
+: 경험에 따라 상황에 맞는 구현 전략 선택 필요
+
+1. 유효성 검사 기본
+1) 라우팅 확인 : p.108
+2) 컨트롤러 작성 : p.108
+3) 뷰작성 : p.108
+4) 테스트 : GET /articles/create
+
+5) store 로직 구현 : 컨트롤러
+p.110
+
+6) 플래시 메시지 처리 뷰작성: p.112
+
+7) 유효성검사 메시지 한글화
+a. config/app.php: 'locale'=>'ko' p.113
+b. 컨트롤러 수정: p.113
+
+2. 트레이트 사용하여 유효성 검사
+1) 컨트롤러 수정
+p.114
+
+3. 폼리퀘스트 클래스 이용
+1) 사용자 정의 리퀘스트 클래스 작성
+php artisan make:rerquest ArticlesRequest
+
+2) ArticlesRequest.php 수정 : p.115
+
+3) 컨트롤러 수정 : p.116

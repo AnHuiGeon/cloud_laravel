@@ -1,0 +1,52 @@
+<< Composer >>
+: 소프트웨어의 구성요소(컴포넌트)를 관리 하기 위한 도구
+  의존성 관리(Dependency)
+  PHP의 표준 의존성 관리 도구
+  packagist.org에서 검색
+  npmjs.com
+  pypi.org
+
+1. 로컬 컴포넌트 레지스트리
+: composer.json
+json 파일 내용 확인후
+1) 설치 : composer install # composer.json파일의 필요한 컴포넌트 모두 설치
+2) 하나의 컴포넌트 설치
+   composer require "밴더명/패키지명[:버전정보]"
+- composer.lock : 확인 가능
+3) 업데이트
+   composer update
+   ["밴더명/패키지명[:버전정보]"]
+   [--with-dependencies]
+4) 삭제하기
+   composer remove
+   ["벤더명/패키지명[:버전정보]"]
+   [--update-with-dependencies]
+
+<컴포저 실습1>
+: markdown 문법을 이용한 시스템 구축
+1) https://packagist.org/ 에서 markdown 검색
+2) 패키지 선정
+3) 설치
+   composer require erusev/parsedown-extra
+   composer require "erusev/parsedown-extra:~0.7.0"
+4) php artisan optimize # 최적화, 해도되고 안해도 됨
+5) 사용하기 : 라우팅 수정, p.159
+    //
+6) 테스트 : GET /markdown
+
+<컴포저 실습2>
+: debugbar
+1) https://packagist.org/ 에서 debugbar 검색
+2) 패키지 신청
+3) 설치
+   composer require barryvdh/laravel-debugbar --dev
+4) config/app.php 파일을 수정: 라라벨의 전ㅇ겨 서비스 프로바이더로 등록 p.161
+
+5) 선택사항
+a. 파사드 등록 : config/app.php
+aliases=>[
+'Debugbar' => Barryvdh\Debugbar\Facade::class,
+]
+b. 환경설정, 뷰파일, 마이그레이션 등 컴포넌트 제공 소스를 프로젝트로 복사하기
+   php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider::class"
+6) 컨트롤러 수정

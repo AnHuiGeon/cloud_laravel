@@ -1,0 +1,15 @@
+<<이벤트>>
+Event : State Change
+Event System : State Change를 인식하고 알리면 그것을 어떻게 소비하는 지를 결정해 둔 체계
+- 현대 UI시스템은 Event기반
+- 이점 :
+1) 코드가 간결
+2) 유연성, 확장성/축소성(Scalability)
+3) 빠른 UI 반응
+
+- 느슨한 결합
+
+1. 기본 이벤트 시스템 경험하기
+- 글작성->article.created 이벤트발생->처리
+1) 컨트롤러 수정
+p.119
