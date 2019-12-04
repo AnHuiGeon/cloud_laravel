@@ -13,8 +13,7 @@ class LocalSemestersController extends Controller
      */
     public function index()
     {
-        $datas = \App\LocalSemester::with('user')->orderBy('id', 'desc')->paginate(9);
-        return view('localSemesters.index', compact('datas'));
+        return view('localSemesters.index');
     }
 
     /**
@@ -24,7 +23,8 @@ class LocalSemestersController extends Controller
      */
     public function create()
     {
-        return view('localSemesters.create');
+        $datas = \App\LocalSemester::with('user')->orderBy('id', 'desc')->get();
+        return response()->json($datas);
     }
 
     /**
@@ -35,7 +35,15 @@ class LocalSemestersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $title = $request->title;
+        $content = $request->content;
+        $id = auth()->user()->id;
+        $localSemester = \App\User::find($id)->local_semesters()->create([
+           'title'=>$title,
+           'content'=>$content,
+        ]);
+        $data = \App\LocalSemester::where('id',$localSemester->id)->with('user')->get();
+        return response()->json($data, 201);
     }
 
     /**
@@ -46,7 +54,8 @@ class LocalSemestersController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = \App\LocalSemester::where('id', $id)->with('user')->get();
+        return response()->json($data);
     }
 
     /**
@@ -67,9 +76,13 @@ class LocalSemestersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    // public function update(Request $request, $id)
+    public function update(Request $request, \App\LocalSemester $localSemester)
+    {           
+        $localSemester->update($request->all());
+        // flash()->success('수정하신 내용을 저장했습니다.');
+
+        return response()->json([], 204);
     }
 
     /**
@@ -78,8 +91,9 @@ class LocalSemestersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(\App\LocalSemester $localSemester)
     {
-        //
+        $localSemester->delete();
+        return response()->json([], 204);
     }
 }
